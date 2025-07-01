@@ -1,200 +1,223 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Score Counter</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 10px;
-    background: #f9f9f9;
-  }
-  .container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  .player {
-    flex: 0 0 45%;
-    box-sizing: border-box;
-    padding: 10px;
-    background: white;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    min-width: 280px;
-  }
-  .player input[type="text"] {
-    width: 100%;
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    padding: 6px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  .score {
-    font-size: 4em;
-    text-align: center;
-    margin-bottom: 15px;
-    user-select: none;
-  }
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-  button {
-    font-size: 1em;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    padding: 12px 18px;
-    min-width: 110px;
-    box-sizing: border-box;
-    color: white;
-  }
-  .left-buttons button {
-    background-color: #2196F3;
-  }
-  .right-buttons button {
-    background-color: #f44336;
-  }
-  .actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 5px;
-    flex-wrap: wrap;
-  }
-  #resetBtn {
-    background-color: #444;
-    flex: 1 1 auto;
-  }
-  #saveBtn {
-    background-color: #4CAF50;
-    flex: 1 1 auto;
-  }
-  #clearBtn {
-    background-color: #d32f2f;
-    flex: 1 1 auto;
-  }
-  #undoBtn {
-    background-color: #555;
-    flex: 1 1 auto;
-  }
-  #clearBtn, #undoBtn {
-    min-width: 140px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    background: white;
-    border-radius: 5px;
-    overflow: hidden;
-  }
-  thead {
-    background: #eee;
-  }
-  th, td {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    text-align: center;
-    white-space: nowrap;
-  }
-  /* scroll for small screens */
-  .table-wrapper {
-    overflow-x: auto;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Licznik Beyblade</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+      background: #f0f0f0;
+    }
+
+    .game-area {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    .player {
+      flex: 1 1 48%;
+      max-width: 48%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+
+    .player.left {
+      background-color: #d0e9ff;
+    }
+
+    .player.right {
+      background-color: #ffd6d6;
+    }
+
+    .name-input {
+      font-size: 1.2rem;
+      padding: 5px;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 150px;
+      text-align: center;
+    }
+
+    .score {
+      font-size: 4rem;
+      margin: 10px 0;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      font-size: 1rem;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .btn-points {
+      width: 100%;
+      max-width: 120px;
+    }
+
+    .btn-green {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .btn-gray {
+      background-color: #555;
+      color: white;
+    }
+
+    .btn-red {
+      background-color: #e53935;
+      color: white;
+    }
+
+    .btn-undo {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .mid-controls {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .table-area {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    table th, table td {
+      border: 1px solid #aaa;
+      padding: 6px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 600px) {
+      .score {
+        font-size: 3rem;
+      }
+
+      .btn-points {
+        font-size: 0.9rem;
+      }
+
+      .name-input {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="player left-player">
-    <input type="text" id="nameLeft" placeholder="Bey 1" value="Bey 1" />
-    <div class="score" id="scoreLeft">0</div>
-    <div class="buttons left-buttons">
-      <button onclick="addPoints('left', 1)">Spin +1</button>
-      <button onclick="addPoints('left', 2)">Over +2</button>
-      <button onclick="addPoints('left', 2)">Burst +2</button>
-      <button onclick="addPoints('left', 3)">Extreme +3</button>
+  <div class="game-area">
+    <!-- LEFT PLAYER -->
+    <div class="player left">
+      <input type="text" class="name-input" id="nameLeft" placeholder="Bey 1" />
+      <div class="score" id="scoreLeft">0</div>
+      <div class="controls">
+        <button class="btn btn-points" onclick="addPoints('left', 1)">Spin +1</button>
+        <button class="btn btn-points" onclick="addPoints('left', 2)">Over +2</button>
+        <button class="btn btn-points" onclick="addPoints('left', 2)">Burst +2</button>
+        <button class="btn btn-points" onclick="addPoints('left', 3)">Extreme +3</button>
+      </div>
+    </div>
+
+    <!-- RIGHT PLAYER -->
+    <div class="player right">
+      <input type="text" class="name-input" id="nameRight" placeholder="Bey 2" />
+      <div class="score" id="scoreRight">0</div>
+      <div class="controls">
+        <button class="btn btn-points" onclick="addPoints('right', 1)">Spin +1</button>
+        <button class="btn btn-points" onclick="addPoints('right', 2)">Over +2</button>
+        <button class="btn btn-points" onclick="addPoints('right', 2)">Burst +2</button>
+        <button class="btn btn-points" onclick="addPoints('right', 3)">Extreme +3</button>
+      </div>
     </div>
   </div>
 
-  <div class="player right-player">
-    <input type="text" id="nameRight" placeholder="Bey 2" value="Bey 2" />
-    <div class="score" id="scoreRight">0</div>
-    <div class="buttons right-buttons">
-      <button onclick="addPoints('right', 1)">Spin +1</button>
-      <button onclick="addPoints('right', 2)">Over +2</button>
-      <button onclick="addPoints('right', 2)">Burst +2</button>
-      <button onclick="addPoints('right', 3)">Extreme +3</button>
-    </div>
+  <!-- MIDDLE BUTTONS -->
+  <div class="mid-controls">
+    <button class="btn btn-gray" onclick="resetScores()">Reset</button>
+    <button class="btn btn-green" onclick="saveResult()">Zapisz</button>
+    <button class="btn btn-red" onclick="confirmClear()">Wyczyść tabelę</button>
+    <button class="btn btn-undo" onclick="undoLast()">⬅ Cofnij</button>
   </div>
-</div>
 
-<div class="actions">
-  <button id="resetBtn" onclick="resetScores()">Reset</button>
-  <button id="saveBtn" onclick="saveResult()">Zapisz</button>
-  <button id="clearBtn" onclick="confirmClear()">Wyczysc tabele</button>
-  <button id="undoBtn" onclick="undoLast()">← Cofnij</button>
-</div>
+  <!-- TABLE -->
+  <div class="table-area">
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Bey 1</th>
+          <th>Pkt.</th>
+          <th>Pkt.</th>
+          <th>Bey 2</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-<div class="table-wrapper">
-  <table id="resultsTable">
-    <thead>
-      <tr>
-        <th>Bey 1</th>
-        <th>Pkt.</th>
-        <th>Pkt.</th>
-        <th>Bey 2</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Wyniki będą tutaj -->
-    </tbody>
-  </table>
-</div>
+  <script>
+    let scoreLeft = 0;
+    let scoreRight = 0;
+    let history = [];
 
-<script>
-let scoreLeft = 0;
-let scoreRight = 0;
-let history = [];
+    function updateScores() {
+      document.getElementById("scoreLeft").innerText = scoreLeft;
+      document.getElementById("scoreRight").innerText = scoreRight;
+    }
 
-window.onload = function() {
-  loadResultsFromStorage();
-  updateScores();
-};
+    function addPoints(side, points) {
+      history.push({ side, points });
+      if (side === 'left') scoreLeft = Math.max(0, scoreLeft + points);
+      else scoreRight = Math.max(0, scoreRight + points);
+      updateScores();
+    }
 
-function updateScores() {
-  const leftEl = document.getElementById("scoreLeft");
-  const rightEl = document.getElementById("scoreRight");
-  leftEl.innerText = scoreLeft;
-  rightEl.innerText = scoreRight;
+    function resetScores() {
+      scoreLeft = 0;
+      scoreRight = 0;
+      history = [];
+      updateScores();
+    }
 
-  leftEl.style.color = scoreLeft >= 7 ? "green" : "red";
-  rightEl.style.color = scoreRight >= 7 ? "green" : "red";
-}
-
-function addPoints(side, points) {
-  history.push({ side, points });
-  if (side === 'left') scoreLeft = Math.max(0, scoreLeft + points);
-  else scoreRight = Math.max(0, scoreRight + points);
-  updateScores();
-}
-
-function resetScores() {
-  scoreLeft = 0;
-  scoreRight = 0;
-  history = [];
-  updateScores();
-}
-
-function saveResult() {
-  const nameL = document.getElementById("nameLeft").value.trim() || "Bey 1";
-  const nameR = document.getElementById("nameRight").value.trim() || "Bey 2";
+    function saveResult() {
+  const nameL = document.getElementById("nameLeft").value || "Bey 1";
+  const nameR = document.getElementById("nameRight").value || "Bey 2";
   const table = document.getElementById("resultsTable").querySelector("tbody");
   const row = table.insertRow();
   row.insertCell(0).innerText = nameL;
@@ -209,54 +232,27 @@ function saveResult() {
 
   row.insertCell(3).innerText = nameR;
 
-  saveResultsToStorage(nameL, scoreLeft, scoreRight, nameR);
-
   scoreLeft = 0;
   scoreRight = 0;
   history = [];
   updateScores();
 }
 
-function confirmClear() {
-  if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
-    document.getElementById("resultsTable").querySelector("tbody").innerHTML = '';
-    localStorage.removeItem('beyResults');
-  }
-}
 
-function undoLast() {
-  const last = history.pop();
-  if (!last) return;
-  if (last.side === 'left') scoreLeft = Math.max(0, scoreLeft - last.points);
-  else scoreRight = Math.max(0, scoreRight - last.points);
-  updateScores();
-}
 
-function saveResultsToStorage(nameL, scoreL, scoreR, nameR) {
-  let results = JSON.parse(localStorage.getItem('beyResults')) || [];
-  results.push({ nameL, scoreL, scoreR, nameR });
-  localStorage.setItem('beyResults', JSON.stringify(results));
-}
+    function confirmClear() {
+      if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
+        document.getElementById("resultsTable").querySelector("tbody").innerHTML = '';
+      }
+    }
 
-function loadResultsFromStorage() {
-  const results = JSON.parse(localStorage.getItem('beyResults')) || [];
-  const tableBody = document.getElementById("resultsTable").querySelector("tbody");
-  results.forEach(res => {
-    const row = tableBody.insertRow();
-    row.insertCell(0).innerText = res.nameL;
-
-    const cellLeft = row.insertCell(1);
-    cellLeft.innerText = res.scoreL;
-    cellLeft.style.color = res.scoreL >= 7 ? "green" : "red";
-
-    const cellRight = row.insertCell(2);
-    cellRight.innerText = res.scoreR;
-    cellRight.style.color = res.scoreR >= 7 ? "green" : "red";
-
-    row.insertCell(3).innerText = res.nameR;
-  });
-}
-</script>
-
+    function undoLast() {
+      const last = history.pop();
+      if (!last) return;
+      if (last.side === 'left') scoreLeft = Math.max(0, scoreLeft - last.points);
+      else scoreRight = Math.max(0, scoreRight - last.points);
+      updateScores();
+    }
+  </script>
 </body>
 </html>
