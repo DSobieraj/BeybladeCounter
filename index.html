@@ -192,30 +192,36 @@
   </div>
 
   <script>
-    let scoreLeft = 0;
-    let scoreRight = 0;
-    let history = [];
+  let scoreLeft = 0;
+let scoreRight = 0;
+let history = [];
 
-    function updateScores() {
-      document.getElementById("scoreLeft").innerText = scoreLeft;
-      document.getElementById("scoreRight").innerText = scoreRight;
-    }
+// Wczytaj wyniki z localStorage przy starcie
+window.onload = function() {
+  loadResultsFromStorage();
+  updateScores();
+};
 
-    function addPoints(side, points) {
-      history.push({ side, points });
-      if (side === 'left') scoreLeft = Math.max(0, scoreLeft + points);
-      else scoreRight = Math.max(0, scoreRight + points);
-      updateScores();
-    }
+function updateScores() {
+  document.getElementById("scoreLeft").innerText = scoreLeft;
+  document.getElementById("scoreRight").innerText = scoreRight;
+}
 
-    function resetScores() {
-      scoreLeft = 0;
-      scoreRight = 0;
-      history = [];
-      updateScores();
-    }
+function addPoints(side, points) {
+  history.push({ side, points });
+  if (side === 'left') scoreLeft = Math.max(0, scoreLeft + points);
+  else scoreRight = Math.max(0, scoreRight + points);
+  updateScores();
+}
 
-    function saveResult() {
+function resetScores() {
+  scoreLeft = 0;
+  scoreRight = 0;
+  history = [];
+  updateScores();
+}
+
+function saveResult() {
   const nameL = document.getElementById("nameLeft").value || "Bey 1";
   const nameR = document.getElementById("nameRight").value || "Bey 2";
   const table = document.getElementById("resultsTable").querySelector("tbody");
@@ -232,27 +238,52 @@
 
   row.insertCell(3).innerText = nameR;
 
+  // Zapisz do localStorage
+  saveResultsToStorage(nameL, scoreLeft, scoreRight, nameR);
+
   scoreLeft = 0;
   scoreRight = 0;
   history = [];
   updateScores();
 }
 
+function confirmClear() {
+  if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
+    document.getElementById("resultsTable").querySelector("tbody").innerHTML = '';
+    localStorage.removeItem('beyResults');
+  }
+}
 
+function undoLast() {
+  const last = history.pop();
+  if (!last) return;
+  if (last.side === 'left') scoreLeft = Math.max(0, scoreLeft - last.points);
+  else scoreRight = Math.max(0, scoreRight - last.points);
+  updateScores();
+}
 
-    function confirmClear() {
-      if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
-        document.getElementById("resultsTable").querySelector("tbody").innerHTML = '';
-      }
-    }
+function saveResultsToStorage(nameL, scoreL, scoreR, nameR) {
+  let results = JSON.parse(localStorage.getItem('beyResults')) || [];
+  results.push({ nameL, scoreL, scoreR, nameR });
+  localStorage.setItem('beyResults', JSON.stringify(results));
+}
 
-    function undoLast() {
-      const last = history.pop();
-      if (!last) return;
-      if (last.side === 'left') scoreLeft = Math.max(0, scoreLeft - last.points);
-      else scoreRight = Math.max(0, scoreRight - last.points);
-      updateScores();
-    }
-  </script>
-</body>
-</html>
+function loadResultsFromStorage() {
+  const results = JSON.parse(localStorage.getItem('beyResults')) || [];
+  const tableBody = document.getElementById("resultsTable").querySelector("tbody");
+  results.forEach(res => {
+    const row = tableBody.insertRow();
+    row.insertCell(0).innerText = res.nameL;
+
+    const cellLeft = row.insertCell(1);
+    cellLeft.innerText = res.scoreL;
+    cellLeft.style.color = res.scoreL >= 7 ? "green" : "red";
+
+    const cellRight = row.insertCell(2);
+    cellRight.innerText = res.scoreR;
+    cellRight.style.color = res.scoreR >= 7 ? "green" : "red";
+
+    row.insertCell(3).innerText = res.nameR;
+  });
+}
+
