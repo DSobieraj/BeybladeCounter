@@ -232,12 +232,19 @@
 
   row.insertCell(3).innerText = nameR;
 
+saveResultsToStorage(nameL, scoreLeft, scoreRight, nameR);
+
   scoreLeft = 0;
   scoreRight = 0;
   history = [];
   updateScores();
 }
 
+function saveResultsToStorage(nameL, scoreL, scoreR, nameR) {
+  let results = JSON.parse(localStorage.getItem('beyResults')) || [];
+  results.push({ nameL, scoreL, scoreR, nameR });
+  localStorage.setItem('beyResults', JSON.stringify(results));
+}
 
 
     function confirmClear() {
@@ -253,6 +260,31 @@
       else scoreRight = Math.max(0, scoreRight - last.points);
       updateScores();
     }
+
+window.onload = function() {
+  // odczyt wyników z localStorage
+  const results = JSON.parse(localStorage.getItem('beyResults')) || [];
+  const tableBody = document.getElementById("resultsTable").querySelector("tbody");
+
+  // wypisz wszystkie wyniki w tabeli
+  results.forEach(res => {
+    const row = tableBody.insertRow();
+    row.insertCell(0).innerText = res.nameL;
+
+    const cellLeft = row.insertCell(1);
+    cellLeft.innerText = res.scoreL;
+    cellLeft.style.color = res.scoreL >= 7 ? "green" : "red";
+
+    const cellRight = row.insertCell(2);
+    cellRight.innerText = res.scoreR;
+    cellRight.style.color = res.scoreR >= 7 ? "green" : "red";
+
+    row.insertCell(3).innerText = res.nameR;
+  });
+
+  updateScores();
+};
+
   </script>
 </body>
 </html>
