@@ -216,15 +216,22 @@
     }
 
     function saveResult() {
-      const nameL = document.getElementById("nameLeft").value || "Bey 1";
-      const nameR = document.getElementById("nameRight").value || "Bey 2";
-      const table = document.getElementById("resultsTable").querySelector("tbody");
-      const row = table.insertRow();
-      row.insertCell(0).innerText = nameL;
-      row.insertCell(1).innerText = scoreLeft;
-      row.insertCell(2).innerText = scoreRight;
-      row.insertCell(3).innerText = nameR;
-    }
+  const nameL = document.getElementById("nameLeft").value || "Bey 1";
+  const nameR = document.getElementById("nameRight").value || "Bey 2";
+  const table = document.getElementById("resultsTable").querySelector("tbody");
+  const row = table.insertRow();
+  row.insertCell(0).innerText = nameL;
+  row.insertCell(1).innerText = scoreLeft;
+  row.insertCell(2).innerText = scoreRight;
+  row.insertCell(3).innerText = nameR;
+
+  // Resetuj tylko punkty, nie nazwy
+  scoreLeft = 0;
+  scoreRight = 0;
+  history = [];
+  updateScores();
+}
+
 
     function confirmClear() {
       if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
