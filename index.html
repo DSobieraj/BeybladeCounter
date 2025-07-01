@@ -12,28 +12,26 @@
       background: #f0f0f0;
     }
 
-  .game-area {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-}
-
+    .game-area {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
 
     .player {
-  flex: 1 1 48%;
-  max-width: 48%;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px;
-  border-radius: 10px;
-  box-sizing: border-box;
-}
-
+      flex: 1 1 48%;
+      max-width: 48%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
 
     .player.left {
       background-color: #d0e9ff;
@@ -64,12 +62,33 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
     }
 
     .btn-points {
       width: 100%;
       max-width: 120px;
-      white-space: nowrap;
+    }
+
+    .btn-green {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .btn-gray {
+      background-color: #555;
+      color: white;
+    }
+
+    .btn-red {
+      background-color: #e53935;
+      color: white;
+    }
+
+    .btn-undo {
+      background-color: #2196F3;
+      color: white;
     }
 
     .controls {
@@ -115,10 +134,6 @@
         font-size: 0.9rem;
       }
 
-      .player {
-        flex: 1 1 100%;
-      }
-
       .name-input {
         font-size: 1rem;
       }
@@ -133,8 +148,6 @@
       <input type="text" class="name-input" id="nameLeft" placeholder="Bey 1" />
       <div class="score" id="scoreLeft">0</div>
       <div class="controls">
-        <button class="btn btn-points" onclick="addPoints('left', 1)">+1</button>
-        <button class="btn btn-points" onclick="addPoints('left', -1)">-1</button>
         <button class="btn btn-points" onclick="addPoints('left', 1)">Spin +1</button>
         <button class="btn btn-points" onclick="addPoints('left', 2)">Over +2</button>
         <button class="btn btn-points" onclick="addPoints('left', 2)">Burst +2</button>
@@ -147,8 +160,6 @@
       <input type="text" class="name-input" id="nameRight" placeholder="Bey 2" />
       <div class="score" id="scoreRight">0</div>
       <div class="controls">
-        <button class="btn btn-points" onclick="addPoints('right', 1)">+1</button>
-        <button class="btn btn-points" onclick="addPoints('right', -1)">-1</button>
         <button class="btn btn-points" onclick="addPoints('right', 1)">Spin +1</button>
         <button class="btn btn-points" onclick="addPoints('right', 2)">Over +2</button>
         <button class="btn btn-points" onclick="addPoints('right', 2)">Burst +2</button>
@@ -159,9 +170,10 @@
 
   <!-- MIDDLE BUTTONS -->
   <div class="mid-controls">
-    <button class="btn" onclick="resetScores()">Reset</button>
-    <button class="btn" onclick="saveResult()">Zapisz</button>
-    <button class="btn" onclick="confirmClear()">Wyczyść</button>
+    <button class="btn btn-gray" onclick="resetScores()">Reset</button>
+    <button class="btn btn-green" onclick="saveResult()">Zapisz</button>
+    <button class="btn btn-red" onclick="confirmClear()">Wyczyść tabelę</button>
+    <button class="btn btn-undo" onclick="undoLast()">⬅ Cofnij</button>
   </div>
 
   <!-- TABLE -->
@@ -182,6 +194,7 @@
   <script>
     let scoreLeft = 0;
     let scoreRight = 0;
+    let history = [];
 
     function updateScores() {
       document.getElementById("scoreLeft").innerText = scoreLeft;
@@ -189,6 +202,7 @@
     }
 
     function addPoints(side, points) {
+      history.push({ side, points });
       if (side === 'left') scoreLeft = Math.max(0, scoreLeft + points);
       else scoreRight = Math.max(0, scoreRight + points);
       updateScores();
@@ -197,6 +211,7 @@
     function resetScores() {
       scoreLeft = 0;
       scoreRight = 0;
+      history = [];
       updateScores();
     }
 
@@ -215,6 +230,14 @@
       if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
         document.getElementById("resultsTable").querySelector("tbody").innerHTML = '';
       }
+    }
+
+    function undoLast() {
+      const last = history.pop();
+      if (!last) return;
+      if (last.side === 'left') scoreLeft = Math.max(0, scoreLeft - last.points);
+      else scoreRight = Math.max(0, scoreRight - last.points);
+      updateScores();
     }
   </script>
 </body>
