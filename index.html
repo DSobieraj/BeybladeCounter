@@ -2,196 +2,171 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Licznik punktów z zapisem</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Licznik Beyblade</title>
   <style>
     body {
-      margin: 0; font-family: Arial, sans-serif;
-      display: flex; height: 100vh; overflow: hidden;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+      background: #f0f0f0;
     }
-    .side {
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .player {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
-      box-sizing: border-box;
-      border: 2px solid #333;
-      background-clip: padding-box;
+      padding: 10px;
+      border-radius: 10px;
     }
-    .left { background: #d0e4ff; color: #004a99; }
-    .right { background: #ffd0d0; color: #990000; }
+
+    .player.left {
+      background-color: #d0e9ff;
+    }
+
+    .player.right {
+      background-color: #ffd6d6;
+    }
+
     .name-input {
-      width: 90%;
-      padding: 10px 15px;
-      font-size: 20px;
-      border: 1px solid #888;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    .score {
-      font-size: 120px;
-      margin: 20px 0 40px 0;
-      user-select: none;
-    }
-    .buttons {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 15px;
-    }
-    button {
-      font-size: 48px;
-      width: 80px;
-      height: 80px;
-      border-radius: 15px;
-      border: none;
-      cursor: pointer;
-      background-color: #4a90e2;
-      color: white;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    button:active {
-      background-color: #357ABD;
-    }
-    .small-btns {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 15px; /* przesunięte niżej */
-      width: 90%;
-    }
-    .small-btns button {
-      font-size: 18px;       /* zmniejszone, żeby tekst się zmieścił */
-      width: 95px;           /* trochę szersze */
-      height: 45px;          /* trochę niższe */
-      border-radius: 12px;
-      background-color: #1e88e5;
-      line-height: 1.2;
-      padding: 0 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      user-select: none;
-      white-space: nowrap;   /* zapobiega łamaniu tekstu */
-    }
-    .small-btns button:active {
-      background-color: #155a9c;
-    }
-    #resetBtn, #saveBtn {
-      font-size: 20px;
-      width: 120px;
-      height: 50px;
-      border-radius: 10px;
-      color: white;
-      border: none;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    #resetBtn {
-      background-color: #555;
-      margin-top: auto;
-    }
-    #resetBtn:active {
-      background-color: #333;
-    }
-    #saveBtn {
-      background-color: #27ae60;
-      margin-top: auto;
-    }
-    #saveBtn:active {
-      background-color: #1e8449;
-    }
-    #scoreTableContainer {
-      width: 430px;
-      border-left: 2px solid #333;
-      background: #f0f0f0;
-      overflow-y: auto;
-      padding: 20px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-    }
-    #clearBtn {
-      align-self: flex-end;
+      font-size: 1.2rem;
+      padding: 5px;
       margin-bottom: 10px;
-      background-color: #c0392b;
+      width: 100%;
+      max-width: 150px;
+      text-align: center;
+    }
+
+    .score {
+      font-size: 4rem;
+      margin: 10px 0;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      font-size: 1rem;
+      margin: 5px;
       border: none;
-      color: white;
-      font-size: 18px;
-      padding: 10px 25px; /* jeszcze większy padding, żeby tekst się mieścił */
       border-radius: 8px;
       cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease;
-      text-align: center;
+    }
+
+    .btn-points {
+      width: 100%;
+      max-width: 120px;
       white-space: nowrap;
     }
-    #clearBtn:active {
-      background-color: #7b241c;
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
+    .mid-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .table-area {
+      flex: 1;
+      overflow-x: auto;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 16px;
+      margin-top: 10px;
+      font-size: 0.9rem;
     }
-    th, td {
-      padding: 6px 10px;
-      border: 1px solid #888;
+
+    table th, table td {
+      border: 1px solid #aaa;
+      padding: 6px;
       text-align: center;
       white-space: nowrap;
     }
-    th {
-      background-color: #333;
-      color: white;
-      position: sticky;
-      top: 0;
+
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .score {
+        font-size: 3rem;
+      }
+
+      .btn-points {
+        font-size: 0.9rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="side left">
-    <input id="leftName" class="name-input" placeholder="Bey 1" value="Bey 1" />
-    <div class="score" id="leftScore">0</div>
-    <div class="buttons">
-      <button onclick="changeScore('left', 1)">+</button>
-      <button onclick="changeScore('left', -1)">−</button>
+  <div class="container">
+    <!-- LEFT PLAYER -->
+    <div class="player left">
+      <input type="text" class="name-input" id="nameLeft" placeholder="Bey 1" />
+      <div class="score" id="scoreLeft">0</div>
+      <div class="controls">
+        <button class="btn btn-points" onclick="addPoints('left', 1)">+1</button>
+        <button class="btn btn-points" onclick="addPoints('left', -1)">-1</button>
+        <button class="btn btn-points" onclick="addPoints('left', 1)">Spin +1</button>
+        <button class="btn btn-points" onclick="addPoints('left', 2)">Over +2</button>
+        <button class="btn btn-points" onclick="addPoints('left', 2)">Burst +2</button>
+        <button class="btn btn-points" onclick="addPoints('left', 3)">Extreme +3</button>
+      </div>
     </div>
-    <div class="small-btns">
-      <button onclick="changeScore('left', 1)">Spin +1</button>
-      <button onclick="changeScore('left', 2)">Over +2</button>
-      <button onclick="changeScore('left', 2)">Burst +2</button>
-      <button onclick="changeScore('left', 3)">Extreme +3</button>
+
+    <!-- MIDDLE CONTROLS -->
+    <div class="mid-controls">
+      <button class="btn" onclick="resetScores()">Reset</button>
+      <button class="btn" onclick="saveResult()">Zapisz</button>
+      <button class="btn" onclick="confirmClear()">Wyczyść</button>
     </div>
-    <button id="resetBtn" onclick="resetScores()">Reset</button>
+
+    <!-- RIGHT PLAYER -->
+    <div class="player right">
+      <input type="text" class="name-input" id="nameRight" placeholder="Bey 2" />
+      <div class="score" id="scoreRight">0</div>
+      <div class="controls">
+        <button class="btn btn-points" onclick="addPoints('right', 1)">+1</button>
+        <button class="btn btn-points" onclick="addPoints('right', -1)">-1</button>
+        <button class="btn btn-points" onclick="addPoints('right', 1)">Spin +1</button>
+        <button class="btn btn-points" onclick="addPoints('right', 2)">Over +2</button>
+        <button class="btn btn-points" onclick="addPoints('right', 2)">Burst +2</button>
+        <button class="btn btn-points" onclick="addPoints('right', 3)">Extreme +3</button>
+      </div>
+    </div>
   </div>
 
-  <div class="side right">
-    <input id="rightName" class="name-input" placeholder="Bey 2" value="Bey 2" />
-    <div class="score" id="rightScore">0</div>
-    <div class="buttons">
-      <button onclick="changeScore('right', 1)">+</button>
-      <button onclick="changeScore('right', -1)">−</button>
-    </div>
-    <div class="small-btns">
-      <button onclick="changeScore('right', 1)">Spin +1</button>
-      <button onclick="changeScore('right', 2)">Over +2</button>
-      <button onclick="changeScore('right', 2)">Burst +2</button>
-      <button onclick="changeScore('right', 3)">Extreme +3</button>
-    </div>
-    <button id="saveBtn" onclick="saveResult()">Zapisz</button>
-  </div>
-
-  <div id="scoreTableContainer">
-    <button id="clearBtn" onclick="clearResults()">Wyczyść</button>
-    <h3>Wyniki</h3>
-    <table id="scoreTable">
+  <!-- SCORE TABLE -->
+  <div class="table-area">
+    <table id="resultsTable">
       <thead>
         <tr>
           <th>Bey 1</th>
@@ -200,97 +175,47 @@
           <th>Bey 2</th>
         </tr>
       </thead>
-      <tbody>
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
   <script>
-    window.onload = function() {
-      const leftName = localStorage.getItem('leftName');
-      const rightName = localStorage.getItem('rightName');
-      const leftScore = localStorage.getItem('leftScore');
-      const rightScore = localStorage.getItem('rightScore');
-      if (leftName) document.getElementById('leftName').value = leftName;
-      if (rightName) document.getElementById('rightName').value = rightName;
-      if (leftScore) document.getElementById('leftScore').textContent = leftScore;
-      if (rightScore) document.getElementById('rightScore').textContent = rightScore;
+    let scoreLeft = 0;
+    let scoreRight = 0;
 
-      loadSavedResults();
-
-      document.getElementById('leftName').addEventListener('input', saveData);
-      document.getElementById('rightName').addEventListener('input', saveData);
-    };
-
-    function changeScore(side, delta) {
-      const scoreEl = document.getElementById(side + 'Score');
-      let score = parseInt(scoreEl.textContent);
-      score += delta;
-      if (score < 0) score = 0;
-      scoreEl.textContent = score;
-      saveData();
+    function updateScores() {
+      document.getElementById("scoreLeft").innerText = scoreLeft;
+      document.getElementById("scoreRight").innerText = scoreRight;
     }
 
-    function saveData() {
-      localStorage.setItem('leftName', document.getElementById('leftName').value);
-      localStorage.setItem('rightName', document.getElementById('rightName').value);
-      localStorage.setItem('leftScore', document.getElementById('leftScore').textContent);
-      localStorage.setItem('rightScore', document.getElementById('rightScore').textContent);
+    function addPoints(side, points) {
+      if (side === 'left') scoreLeft = Math.max(0, scoreLeft + points);
+      else scoreRight = Math.max(0, scoreRight + points);
+      updateScores();
     }
 
     function resetScores() {
-      document.getElementById('leftScore').textContent = '0';
-      document.getElementById('rightScore').textContent = '0';
-      saveData();
+      scoreLeft = 0;
+      scoreRight = 0;
+      updateScores();
     }
 
     function saveResult() {
-      const leftName = document.getElementById('leftName').value.trim() || 'Bey 1';
-      const rightName = document.getElementById('rightName').value.trim() || 'Bey 2';
-      const leftScore = document.getElementById('leftScore').textContent;
-      const rightScore = document.getElementById('rightScore').textContent;
-
-      let results = JSON.parse(localStorage.getItem('resultsList') || '[]');
-      results.push({
-        leftName: leftName,
-        rightName: rightName,
-        leftScore: leftScore,
-        rightScore: rightScore
-      });
-      localStorage.setItem('resultsList', JSON.stringify(results));
-
-      addResultRow(leftName, leftScore, rightScore, rightName);
+      const nameL = document.getElementById("nameLeft").value || "Bey 1";
+      const nameR = document.getElementById("nameRight").value || "Bey 2";
+      const table = document.getElementById("resultsTable").querySelector("tbody");
+      const row = table.insertRow();
+      row.insertCell(0).innerText = nameL;
+      row.insertCell(1).innerText = scoreLeft;
+      row.insertCell(2).innerText = scoreRight;
+      row.insertCell(3).innerText = nameR;
     }
 
-    function loadSavedResults() {
-      let results = JSON.parse(localStorage.getItem('resultsList') || '[]');
-      results.forEach(res => {
-        addResultRow(res.leftName, res.leftScore, res.rightScore, res.rightName);
-      });
-    }
-
-    function addResultRow(leftName, leftScore, rightScore, rightName) {
-      const tbody = document.querySelector('#scoreTable tbody');
-      const tr = document.createElement('tr');
-
-      tr.innerHTML = `
-        <td>${leftName}</td>
-        <td>${leftScore}</td>
-        <td>${rightScore}</td>
-        <td>${rightName}</td>
-      `;
-
-      tbody.appendChild(tr);
-    }
-
-    function clearResults() {
-      if (confirm('Czy na pewno chcesz wyczyścić wszystkie zapisane wyniki?')) {
-        localStorage.removeItem('resultsList');
-        const tbody = document.querySelector('#scoreTable tbody');
-        tbody.innerHTML = '';
+    function confirmClear() {
+      if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
+        document.getElementById("resultsTable").querySelector("tbody").innerHTML = '';
       }
     }
   </script>
-
 </body>
 </html>
