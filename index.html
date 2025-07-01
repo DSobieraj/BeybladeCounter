@@ -182,8 +182,8 @@
       <thead>
         <tr>
           <th>Bey 1</th>
-          <th>Wynik L</th>
-          <th>Wynik P</th>
+          <th>Pkt.</th>
+          <th>Pkt.</th>
           <th>Bey 2</th>
         </tr>
       </thead>
@@ -221,16 +221,23 @@
   const table = document.getElementById("resultsTable").querySelector("tbody");
   const row = table.insertRow();
   row.insertCell(0).innerText = nameL;
-  row.insertCell(1).innerText = scoreLeft;
-  row.insertCell(2).innerText = scoreRight;
+
+  const cellLeft = row.insertCell(1);
+  cellLeft.innerText = scoreLeft;
+  cellLeft.style.color = scoreLeft >= 7 ? "green" : "red";
+
+  const cellRight = row.insertCell(2);
+  cellRight.innerText = scoreRight;
+  cellRight.style.color = scoreRight >= 7 ? "green" : "red";
+
   row.insertCell(3).innerText = nameR;
 
-  // Resetuj tylko punkty, nie nazwy
   scoreLeft = 0;
   scoreRight = 0;
   history = [];
   updateScores();
 }
+
 
 
     function confirmClear() {
