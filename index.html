@@ -12,20 +12,23 @@
       background: #f0f0f0;
     }
 
-    .container {
+    .game-area {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      gap: 20px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .player {
-      flex: 1;
+      flex: 1 1 45%;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 10px;
       border-radius: 10px;
+      box-sizing: border-box;
+      min-width: 250px;
     }
 
     .player.left {
@@ -72,22 +75,23 @@
     }
 
     .mid-controls {
+      width: 100%;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      flex-wrap: wrap;
       gap: 10px;
+      margin: 10px 0;
     }
 
     .table-area {
-      flex: 1;
+      width: 100%;
       overflow-x: auto;
+      margin-top: 20px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
       font-size: 0.9rem;
     }
 
@@ -98,17 +102,7 @@
       white-space: nowrap;
     }
 
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-
+    @media (max-width: 600px) {
       .score {
         font-size: 3rem;
       }
@@ -117,17 +111,19 @@
         font-size: 0.9rem;
       }
 
-      .action-buttons {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
+      .player {
+        flex: 1 1 100%;
+      }
+
+      .name-input {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="game-area">
     <!-- LEFT PLAYER -->
     <div class="player left">
       <input type="text" class="name-input" id="nameLeft" placeholder="Bey 1" />
@@ -140,13 +136,6 @@
         <button class="btn btn-points" onclick="addPoints('left', 2)">Burst +2</button>
         <button class="btn btn-points" onclick="addPoints('left', 3)">Extreme +3</button>
       </div>
-    </div>
-
-    <!-- MIDDLE CONTROLS -->
-    <div class="mid-controls">
-      <button class="btn" onclick="resetScores()">Reset</button>
-      <button class="btn" onclick="saveResult()">Zapisz</button>
-      <button class="btn" onclick="confirmClear()">Wyczyść</button>
     </div>
 
     <!-- RIGHT PLAYER -->
@@ -164,7 +153,14 @@
     </div>
   </div>
 
-  <!-- SCORE TABLE -->
+  <!-- MIDDLE BUTTONS -->
+  <div class="mid-controls">
+    <button class="btn" onclick="resetScores()">Reset</button>
+    <button class="btn" onclick="saveResult()">Zapisz</button>
+    <button class="btn" onclick="confirmClear()">Wyczyść</button>
+  </div>
+
+  <!-- TABLE -->
   <div class="table-area">
     <table id="resultsTable">
       <thead>
