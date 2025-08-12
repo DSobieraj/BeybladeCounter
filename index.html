@@ -5,36 +5,93 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Licznik Beyblade</title>
 <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #111; color: white; }
-    .beyblade { display: flex; justify-content: space-between; align-items: center; 
-                border-bottom: 1px solid #444; padding: 10px; height: 33vh; }
-    .name { font-size: 1.2em; font-weight: bold; }
-    .score { font-size: 2em; margin: 5px 0; }
-    .buttons { display: flex; flex-wrap: wrap; gap: 5px; }
-    button { font-size: 1.4em; padding: 12px 16px; border: none; border-radius: 8px; cursor: pointer; }
-    .plus { background: #2ecc71; color: black; flex: 1; }
-    .minus { background: #e74c3c; color: black; flex: 1; }
-    .undo-btn, .reset-btn { width: 100%; padding: 15px; font-size: 1.4em; margin-top: 5px; }
+    :root {
+        --btn-font: 4vw;
+        --input-font: 4vw;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #111;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+    .beyblade {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #444;
+        padding: 1vh 2vw;
+    }
+    .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1vh;
+    }
+    .buttons {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 1vh;
+    }
+    input[type="text"], input[type="number"] {
+        font-size: var(--input-font);
+        padding: 0.5vh;
+        border-radius: 0.5vh;
+        border: none;
+        text-align: center;
+        width: 100%;
+    }
+    button {
+        font-size: var(--btn-font);
+        padding: 1vh 0;
+        border: none;
+        border-radius: 0.8vh;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+    }
+    .plus { background: #2ecc71; color: black; }
+    .minus { background: #e74c3c; color: black; }
+    .control-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1vh;
+        padding: 1vh;
+    }
+    .undo-btn, .reset-btn {
+        flex: 1;
+        font-size: 4.5vw;
+        padding: 1vh;
+        border: none;
+        border-radius: 1vh;
+        cursor: pointer;
+    }
     .undo-btn { background: orange; color: black; }
     .reset-btn { background: #3498db; color: black; }
-    .input-row { margin-top: 5px; }
-    input { font-size: 1.2em; padding: 5px; border-radius: 5px; border: none; width: 100%; }
-    .score-input { width: 70px; text-align: center; }
 </style>
 </head>
 <body>
 
 <div id="bey1" class="beyblade">
-    <div style="flex:1">
+    <div class="info">
         <input type="text" id="name1" placeholder="Beyblade 1" oninput="updateName(1)">
-        <div class="input-row">
-            Punkty: <input type="number" id="score1" class="score-input" onchange="setScore(1, 'you')">
+        <div>
+            Punkty: <input type="number" id="score1" onchange="setScore(1, 'you')">
         </div>
-        <div class="input-row">
-            Przeciwnik: <input type="number" id="opp1" class="score-input" onchange="setScore(1, 'opp')">
+        <div>
+            Przeciwnik: <input type="number" id="opp1" onchange="setScore(1, 'opp')">
         </div>
     </div>
-    <div class="buttons" style="flex:1">
+    <div class="buttons">
         <button class="plus" onclick="addPoints(1, 1)">+1</button>
         <button class="plus" onclick="addPoints(1, 2)">+2</button>
         <button class="plus" onclick="addPoints(1, 3)">+3</button>
@@ -45,16 +102,16 @@
 </div>
 
 <div id="bey2" class="beyblade">
-    <div style="flex:1">
+    <div class="info">
         <input type="text" id="name2" placeholder="Beyblade 2" oninput="updateName(2)">
-        <div class="input-row">
-            Punkty: <input type="number" id="score2" class="score-input" onchange="setScore(2, 'you')">
+        <div>
+            Punkty: <input type="number" id="score2" onchange="setScore(2, 'you')">
         </div>
-        <div class="input-row">
-            Przeciwnik: <input type="number" id="opp2" class="score-input" onchange="setScore(2, 'opp')">
+        <div>
+            Przeciwnik: <input type="number" id="opp2" onchange="setScore(2, 'opp')">
         </div>
     </div>
-    <div class="buttons" style="flex:1">
+    <div class="buttons">
         <button class="plus" onclick="addPoints(2, 1)">+1</button>
         <button class="plus" onclick="addPoints(2, 2)">+2</button>
         <button class="plus" onclick="addPoints(2, 3)">+3</button>
@@ -65,16 +122,16 @@
 </div>
 
 <div id="bey3" class="beyblade">
-    <div style="flex:1">
+    <div class="info">
         <input type="text" id="name3" placeholder="Beyblade 3" oninput="updateName(3)">
-        <div class="input-row">
-            Punkty: <input type="number" id="score3" class="score-input" onchange="setScore(3, 'you')">
+        <div>
+            Punkty: <input type="number" id="score3" onchange="setScore(3, 'you')">
         </div>
-        <div class="input-row">
-            Przeciwnik: <input type="number" id="opp3" class="score-input" onchange="setScore(3, 'opp')">
+        <div>
+            Przeciwnik: <input type="number" id="opp3" onchange="setScore(3, 'opp')">
         </div>
     </div>
-    <div class="buttons" style="flex:1">
+    <div class="buttons">
         <button class="plus" onclick="addPoints(3, 1)">+1</button>
         <button class="plus" onclick="addPoints(3, 2)">+2</button>
         <button class="plus" onclick="addPoints(3, 3)">+3</button>
@@ -84,8 +141,10 @@
     </div>
 </div>
 
-<button class="undo-btn" onclick="undo()">⟲ Cofnij ostatnią akcję</button>
-<button class="reset-btn" onclick="resetAll()">⟲ Resetuj wszystko</button>
+<div class="control-buttons">
+    <button class="undo-btn" onclick="undo()">⟲ Cofnij ostatnią akcję</button>
+    <button class="reset-btn" onclick="resetAll()">⟲ Resetuj wszystko</button>
+</div>
 
 <script>
 let data = JSON.parse(localStorage.getItem("beybladeData")) || {
