@@ -1,290 +1,114 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Licznik Beyblade</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 10px;
-      background: #f0f0f0;
-    }
-
-    .game-area {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-    }
-
-    .player {
-      flex: 1 1 48%;
-      max-width: 48%;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 8px;
-      border-radius: 10px;
-      box-sizing: border-box;
-    }
-
-    .player.left {
-      background-color: #d0e9ff;
-    }
-
-    .player.right {
-      background-color: #ffd6d6;
-    }
-
-    .name-input {
-      font-size: 1.2rem;
-      padding: 5px;
-      margin-bottom: 10px;
-      width: 100%;
-      max-width: 150px;
-      text-align: center;
-    }
-
-    .score {
-      font-size: 4rem;
-      margin: 10px 0;
-    }
-
-    .btn {
-      padding: 10px 15px;
-      font-size: 1rem;
-      margin: 5px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .btn-points {
-      width: 100%;
-      max-width: 120px;
-    }
-
-    .btn-green {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    .btn-gray {
-      background-color: #555;
-      color: white;
-    }
-
-    .btn-red {
-      background-color: #e53935;
-      color: white;
-    }
-
-    .btn-undo {
-      background-color: #2196F3;
-      color: white;
-    }
-
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .mid-controls {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 10px 0;
-    }
-
-    .table-area {
-      width: 100%;
-      overflow-x: auto;
-      margin-top: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    table th, table td {
-      border: 1px solid #aaa;
-      padding: 6px;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    @media (max-width: 600px) {
-      .score {
-        font-size: 3rem;
-      }
-
-      .btn-points {
-        font-size: 0.9rem;
-      }
-
-      .name-input {
-        font-size: 1rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Licznik Beyblade</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #111; color: white; }
+    .beyblade { display: flex; justify-content: space-between; align-items: center; 
+                border-bottom: 1px solid #444; padding: 10px; height: 33vh; }
+    .name { font-size: 1.2em; font-weight: bold; }
+    .score { font-size: 2em; margin: 5px 0; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 5px; }
+    button { font-size: 1.2em; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; }
+    .plus { background: #2ecc71; color: black; }
+    .minus { background: #e74c3c; color: black; }
+    .undo-btn { width: 100%; padding: 10px; font-size: 1.2em; background: orange; color: black; }
+</style>
 </head>
 <body>
 
-  <div class="game-area">
-    <!-- LEFT PLAYER -->
-    <div class="player left">
-      <input type="text" class="name-input" id="nameLeft" placeholder="Bey 1" />
-      <div class="score" id="scoreLeft">0</div>
-      <div class="controls">
-        <button class="btn btn-points" onclick="addPoints('left', 1)">Spin +1</button>
-        <button class="btn btn-points" onclick="addPoints('left', 2)">Over +2</button>
-        <button class="btn btn-points" onclick="addPoints('left', 2)">Burst +2</button>
-        <button class="btn btn-points" onclick="addPoints('left', 3)">Extreme +3</button>
-      </div>
+<div id="bey1" class="beyblade">
+    <div>
+        <div class="name">Beyblade 1</div>
+        <div>Punkty: <span class="score" id="score1">0</span></div>
+        <div>Przeciwnik: <span class="score" id="opp1">0</span></div>
     </div>
-
-    <!-- RIGHT PLAYER -->
-    <div class="player right">
-      <input type="text" class="name-input" id="nameRight" placeholder="Bey 2" />
-      <div class="score" id="scoreRight">0</div>
-      <div class="controls">
-        <button class="btn btn-points" onclick="addPoints('right', 1)">Spin +1</button>
-        <button class="btn btn-points" onclick="addPoints('right', 2)">Over +2</button>
-        <button class="btn btn-points" onclick="addPoints('right', 2)">Burst +2</button>
-        <button class="btn btn-points" onclick="addPoints('right', 3)">Extreme +3</button>
-      </div>
+    <div class="buttons">
+        <button class="plus" onclick="addPoints(1, 1)">+1</button>
+        <button class="plus" onclick="addPoints(1, 2)">+2</button>
+        <button class="plus" onclick="addPoints(1, 3)">+3</button>
+        <button class="minus" onclick="addPoints(1, -1)">-1</button>
+        <button class="minus" onclick="addPoints(1, -2)">-2</button>
+        <button class="minus" onclick="addPoints(1, -3)">-3</button>
     </div>
-  </div>
+</div>
 
-  <!-- MIDDLE BUTTONS -->
-  <div class="mid-controls">
-    <button class="btn btn-gray" onclick="resetScores()">Reset</button>
-    <button class="btn btn-green" onclick="saveResult()">Zapisz</button>
-    <button class="btn btn-red" onclick="confirmClear()">Wyczyść tabelę</button>
-    <button class="btn btn-undo" onclick="undoLast()">⬅ Cofnij</button>
-  </div>
+<div id="bey2" class="beyblade">
+    <div>
+        <div class="name">Beyblade 2</div>
+        <div>Punkty: <span class="score" id="score2">0</span></div>
+        <div>Przeciwnik: <span class="score" id="opp2">0</span></div>
+    </div>
+    <div class="buttons">
+        <button class="plus" onclick="addPoints(2, 1)">+1</button>
+        <button class="plus" onclick="addPoints(2, 2)">+2</button>
+        <button class="plus" onclick="addPoints(2, 3)">+3</button>
+        <button class="minus" onclick="addPoints(2, -1)">-1</button>
+        <button class="minus" onclick="addPoints(2, -2)">-2</button>
+        <button class="minus" onclick="addPoints(2, -3)">-3</button>
+    </div>
+</div>
 
-  <!-- TABLE -->
-  <div class="table-area">
-    <table id="resultsTable">
-      <thead>
-        <tr>
-          <th>Bey 1</th>
-          <th>Pkt.</th>
-          <th>Pkt.</th>
-          <th>Bey 2</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<div id="bey3" class="beyblade">
+    <div>
+        <div class="name">Beyblade 3</div>
+        <div>Punkty: <span class="score" id="score3">0</span></div>
+        <div>Przeciwnik: <span class="score" id="opp3">0</span></div>
+    </div>
+    <div class="buttons">
+        <button class="plus" onclick="addPoints(3, 1)">+1</button>
+        <button class="plus" onclick="addPoints(3, 2)">+2</button>
+        <button class="plus" onclick="addPoints(3, 3)">+3</button>
+        <button class="minus" onclick="addPoints(3, -1)">-1</button>
+        <button class="minus" onclick="addPoints(3, -2)">-2</button>
+        <button class="minus" onclick="addPoints(3, -3)">-3</button>
+    </div>
+</div>
 
-  <script>
-    let scoreLeft = 0;
-    let scoreRight = 0;
-    let history = [];
+<button class="undo-btn" onclick="undo()">Cofnij ostatnią akcję</button>
 
-    function updateScores() {
-      document.getElementById("scoreLeft").innerText = scoreLeft;
-      document.getElementById("scoreRight").innerText = scoreRight;
-    }
-
-    function addPoints(side, points) {
-      history.push({ side, points });
-      if (side === 'left') scoreLeft = Math.max(0, scoreLeft + points);
-      else scoreRight = Math.max(0, scoreRight + points);
-      updateScores();
-    }
-
-    function resetScores() {
-      scoreLeft = 0;
-      scoreRight = 0;
-      history = [];
-      updateScores();
-    }
-
-    function saveResult() {
-  const nameL = document.getElementById("nameLeft").value || "Bey 1";
-  const nameR = document.getElementById("nameRight").value || "Bey 2";
-  const table = document.getElementById("resultsTable").querySelector("tbody");
-  const row = table.insertRow();
-  row.insertCell(0).innerText = nameL;
-
-  const cellLeft = row.insertCell(1);
-  cellLeft.innerText = scoreLeft;
-  cellLeft.style.color = scoreLeft >= 7 ? "green" : "red";
-
-  const cellRight = row.insertCell(2);
-  cellRight.innerText = scoreRight;
-  cellRight.style.color = scoreRight >= 7 ? "green" : "red";
-
-  row.insertCell(3).innerText = nameR;
-
-saveResultsToStorage(nameL, scoreLeft, scoreRight, nameR);
-
-  scoreLeft = 0;
-  scoreRight = 0;
-  history = [];
-  updateScores();
-}
-
-function saveResultsToStorage(nameL, scoreL, scoreR, nameR) {
-  let results = JSON.parse(localStorage.getItem('beyResults')) || [];
-  results.push({ nameL, scoreL, scoreR, nameR });
-  localStorage.setItem('beyResults', JSON.stringify(results));
-}
-
-
-    function confirmClear() {
-      if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane z tabeli?")) {
-        document.getElementById("resultsTable").querySelector("tbody").innerHTML = '';
-      }
-    }
-
-    function undoLast() {
-      const last = history.pop();
-      if (!last) return;
-      if (last.side === 'left') scoreLeft = Math.max(0, scoreLeft - last.points);
-      else scoreRight = Math.max(0, scoreRight - last.points);
-      updateScores();
-    }
-
-window.onload = function() {
-  // odczyt wyników z localStorage
-  const results = JSON.parse(localStorage.getItem('beyResults')) || [];
-  const tableBody = document.getElementById("resultsTable").querySelector("tbody");
-
-  // wypisz wszystkie wyniki w tabeli
-  results.forEach(res => {
-    const row = tableBody.insertRow();
-    row.insertCell(0).innerText = res.nameL;
-
-    const cellLeft = row.insertCell(1);
-    cellLeft.innerText = res.scoreL;
-    cellLeft.style.color = res.scoreL >= 7 ? "green" : "red";
-
-    const cellRight = row.insertCell(2);
-    cellRight.innerText = res.scoreR;
-    cellRight.style.color = res.scoreR >= 7 ? "green" : "red";
-
-    row.insertCell(3).innerText = res.nameR;
-  });
-
-  updateScores();
+<script>
+let scores = JSON.parse(localStorage.getItem("beybladeScores")) || {
+    1: { you: 0, opp: 0 },
+    2: { you: 0, opp: 0 },
+    3: { you: 0, opp: 0 }
 };
+let history = [];
 
-  </script>
+function updateDisplay() {
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById(`score${i}`).textContent = scores[i].you;
+        document.getElementById(`opp${i}`).textContent = scores[i].opp;
+    }
+}
+
+function saveData() {
+    localStorage.setItem("beybladeScores", JSON.stringify(scores));
+}
+
+function addPoints(bey, points) {
+    history.push(JSON.stringify(scores)); // zapisz stan przed zmianą
+    if (points > 0) {
+        scores[bey].you += points;
+    } else {
+        scores[bey].opp += Math.abs(points);
+    }
+    saveData();
+    updateDisplay();
+}
+
+function undo() {
+    if (history.length > 0) {
+        scores = JSON.parse(history.pop());
+        saveData();
+        updateDisplay();
+    }
+}
+
+updateDisplay();
+</script>
+
 </body>
 </html>
